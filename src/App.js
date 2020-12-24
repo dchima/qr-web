@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import QRCode from 'qrcode.react';
 
@@ -7,20 +7,24 @@ const AppContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #03a9fc;
+  height: 100vh;
 `;
 
 const Content = styled.div`
-  border: 1px solid green;
+  // border: 1px solid green;
   display: flex;
   flex-direction: column;
-  margin-top: 100px;
-  // align-items: center;
+  margin-top: 200px;
+  align-items: center;
 `;
 const FormContainer = styled.div`
   // border: 1px solid red;
-  width: 100%;
-  input {
-    // width: 100%;
+  // width: 80%;
+  textarea {
+    outline: none;
+    resize: vertical;
+    width: 250px;
+    max-height: 100px;
     padding: 12px 20px;
     text-align:center;
     border: 2px solid #000;
@@ -28,19 +32,38 @@ const FormContainer = styled.div`
 `;
 
 const QRContainer = styled.div`
-  border: 1px solid red;
+  // border: 1px solid red;
   margin-top: 50px;
+  margin-bottom: 50px;
+`;
+
+const Button = styled.div`
+  font-size: 12px;
+  align-items: center;
+  padding: 10px 50px;
+  outline: none;
+  width: max-content;
+  justify-item: center;
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #fff;
+  border-radius: 20px 20px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 function App() {
+  const [qrText, setQr ] = useState('');
+  const onChange = (e) => setQr(e.target.value);
   const downloadQR = () => {
-    const canvas = document.getElementById("123456");
+    const canvas = document.getElementById("myQR");
     const pngUrl = canvas
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
     let downloadLink = document.createElement("a");
     downloadLink.href = pngUrl;
-    downloadLink.download = "123456.png";
+    downloadLink.download = "myQR.png";
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
@@ -50,20 +73,20 @@ function App() {
     <AppContainer>
       <Content>
         <FormContainer>
-          <input type='text' placeholder='Add text to convert'></input>
+          <textarea type='text' placeholder='Add text to convert' onChange={(e) => onChange(e)} value={qrText}></textarea>
         </FormContainer>
 
         <QRContainer>
           <QRCode
-            id="123456"
-            value="123456"
+            id='myQR'
+            value={qrText}
             size={290}
             level={"H"}
             includeMargin={true}
           />
         </QRContainer>
 
-        <a onClick={downloadQR}> Download QR </a>
+        <Button onClick={downloadQR}> Download QR </Button>
       </Content>
     </AppContainer>
   );
